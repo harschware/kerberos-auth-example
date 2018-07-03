@@ -30,12 +30,12 @@ import java.security.Security;
 /**
  * See "HttpClient set credentials for Kerberos authentication":
  * https://stackoverflow.com/questions/21629132/httpclient-set-credentials-for-kerberos-authentication
- *
+ * <p>
  * The idea is to show how to authenticate against Kerberos-enabled proxy server with apache HTTP client.
  * The tricky part is to make sure that provided credentials can be used to obtain Kerberot TGT ticket
  * in case no ticket is already available in ticket OS cache.
  * We want to avoid entering password manually via stdin and instead want to use pre-configured password
- *
+ * <p>
  * Notes:
  * - You need to have valid /etc/krb5.conf in place
  * - Make sure to change principal in login.conf
@@ -49,7 +49,7 @@ public class KerberosAuthExample {
     private static final int PROXY_PORT = 3128;
 
     public static void callServer(String url) throws IOException {
-         HttpClient httpclient = getHttpClient();
+        HttpClient httpclient = getHttpClient();
 
         try {
 
@@ -92,7 +92,7 @@ public class KerberosAuthExample {
         Registry<AuthSchemeProvider> authSchemeRegistry = RegistryBuilder.<AuthSchemeProvider>create().register(AuthSchemes.SPNEGO, new SPNegoSchemeFactory(true)).build();
         CloseableHttpClient httpclient = HttpClients.custom()
                 // set our proxy - httpclient doesn't use ProxySelector
-                .setRoutePlanner(new DefaultProxyRoutePlanner(new HttpHost(PROXY_HOST, PROXY_PORT)))
+                //.setRoutePlanner(new DefaultProxyRoutePlanner(new HttpHost(PROXY_HOST, PROXY_PORT)))
                 .setDefaultAuthSchemeRegistry(authSchemeRegistry)
                 .setDefaultCredentialsProvider(credsProvider).build();
 
@@ -122,7 +122,7 @@ public class KerberosAuthExample {
 
         autoconfigureProxy();
 
-        callServer("http://example.com");
-        callServer("https://example.com");
+        callServer("http://sandbox.kylo.io:8998/sessions");
+        //callServer("https://example.com");
     }
 }
